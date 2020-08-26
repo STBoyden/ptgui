@@ -1,0 +1,16 @@
+[package]
+name = "samples"
+version = "0.1.0"
+authors = ["STBoyden <stboyden@stboyden.xyz>"]
+edition = "2018"
+readme = "../README.md"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+raylib = {git = "https://github.com/deltaphc/raylib-rs", branch = "three"}
+ptgui = { version = "0.1.0", path = "../" }
+
+[[bin]]
+name = "button-sample"
+path = "src/button_test.rs"
