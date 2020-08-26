@@ -1,9 +1,9 @@
 use crate::prelude::*;
 use raylib::prelude::*;
-use std::sync::Mutex;
+use std::cell::Cell;
 
 pub struct GuiHandler<'a> {
-    can_draw: Mutex<bool>,
+    can_draw: Cell<bool>,
     clear_colour: Colour,
     draw_handler: RaylibDrawHandle<'a>,
     button_fixed_width: bool,
@@ -12,9 +12,9 @@ pub struct GuiHandler<'a> {
 
 impl GuiHandler<'_> {
     /// Creates a new `GuiHandler<'_>`.
-    pub fn new<'a>(draw_handler: RaylibDrawHandle<'a>, clear_colour: Colour) -> GuiHandler<'a> {
+    pub fn new(draw_handler: RaylibDrawHandle, clear_colour: Colour) -> GuiHandler<'_> {
         GuiHandler {
-            can_draw: Mutex::new(true),
+            can_draw: Cell::new(true),
             clear_colour,
             draw_handler,
             button_fixed_width: false,
@@ -54,7 +54,7 @@ impl GuiHandler<'_> {
 
     /// Draws the `GuiHandler` to the screen.
     pub fn draw(&mut self) -> Result<(), &str> {
-        if !*self.can_draw.lock().unwrap() {
+        if !self.can_draw.get() {
             return Err("Cannot draw. Draw handler was released.");
         }
 
@@ -73,9 +73,9 @@ impl GuiHandler<'_> {
     /// Releases the `RaylibDrawHandle` from the `GuiHandler` so that other non-ptgui related
     /// things can be drawn to the screen afterwards.
     ///
-    /// TODO: Make this automatically happen after calling `draw`.
+    // TODO: Make this automatically happen after calling `draw`.
     pub fn release_draw_handle<'a>(self) -> RaylibDrawHandle<'a> {
-        *self.can_draw.lock().unwrap() = false;
+        self.can_draw.set(false);
         // SAFETY: As can_draw is set to false, any subsequent `draw` call will return an Err
         // making this safe.
         unsafe {

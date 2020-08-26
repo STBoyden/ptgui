@@ -83,15 +83,12 @@ impl GuiComponentBehaviour for Button {
     /// Checks whether cursor is hovering over button, changes colour and returns `true` or `false`
     /// depending on the result.
     fn is_hovered(&mut self, mouse_position: Point) -> bool {
-        match is_inside(self.position, self.dimensions, mouse_position) {
-            true => {
-                self.colour = state_get_colour(StateColour::Hovered);
-                true
-            }
-            false => {
-                self.colour = state_get_colour(StateColour::Default);
-                false
-            }
+        if is_inside(self.position, self.dimensions, mouse_position) {
+            self.colour = state_get_colour(StateColour::Hovered);
+            true
+        } else {
+            self.colour = state_get_colour(StateColour::Default);
+            false
         }
     }
 }
