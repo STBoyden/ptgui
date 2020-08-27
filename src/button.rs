@@ -6,8 +6,9 @@ use raylib::prelude::*;
 
 pub struct Button {
     text: String,
+    action_string: String,
     font_size: i32,
-    position: Point,
+    pub position: Point,
     pub dimensions: Dimensions,
     colour: Colour,
 }
@@ -15,10 +16,11 @@ pub struct Button {
 impl Button {
     /// Create a new button, automatically figuring out width depending on the `text`
     /// and the given `font_size`.
-    pub fn new(text: &str, font_size: i32, position: Point) -> Self {
+    pub fn new(text: &str, action_string: &str, font_size: i32, position: Point) -> Self {
         let dimensions = (measure_text(text, font_size) + 10, 50);
         Self {
             text: text.to_string(),
+            action_string: action_string.to_string(),
             font_size,
             position,
             dimensions,
@@ -29,12 +31,14 @@ impl Button {
     /// Create a new button with specific `dimensions`.
     pub fn new_with_dimensions(
         text: &str,
+        action_string: &str,
         font_size: i32,
         position: Point,
         dimensions: Dimensions,
     ) -> Self {
         Self {
             text: text.to_string(),
+            action_string: action_string.to_string(),
             font_size,
             position,
             dimensions,
@@ -57,7 +61,7 @@ impl Button {
     }
 }
 
-impl GuiComponentBehaviour for Button {
+impl GuiComponentBehaviour<String> for Button {
     /// Draw `Button` to screen.
     fn draw(&mut self, draw_handler: &mut RaylibDrawHandle) {
         let mouse_position = (draw_handler.get_mouse_x(), draw_handler.get_mouse_y());
@@ -89,6 +93,14 @@ impl GuiComponentBehaviour for Button {
         } else {
             self.colour = state_get_colour(StateColour::Default);
             false
+        }
+    }
+
+    fn is_clicked(&mut self, mouse_position: Point, is_clicked: bool) -> String {
+        if is_inside(self.position, self.dimensions, mouse_position) && is_clicked {
+            self.action_string.to_string()
+        } else {
+            "".to_string()
         }
     }
 }
