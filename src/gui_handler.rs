@@ -3,6 +3,7 @@ use raylib::prelude::*;
 use std::cell::Cell;
 
 type Action<T> = dyn Fn(&mut T, &str) -> ();
+type DrawAction = dyn FnMut(&mut RaylibDrawHandle) -> ();
 
 /// The default `struct` to handle the GUI system implemented by the `ptgui` crate.
 pub struct GuiHandler<T> {
@@ -12,6 +13,7 @@ pub struct GuiHandler<T> {
     buttons: Vec<Button>,
     button_action: Box<Action<T>>,
     actions: Vec<String>,
+    additional_draws: Vec<Box<DrawAction>>,
     has_set_button_action: bool,
 }
 
@@ -25,6 +27,7 @@ impl<T> GuiHandler<T> {
             buttons: Vec::new(),
             button_action: Box::new(|_, _| {}),
             actions: Vec::new(),
+            additional_draws: Vec::new(),
             has_set_button_action: false,
         }
     }
@@ -42,6 +45,15 @@ impl<T> GuiHandler<T> {
         for button in self.buttons.iter_mut() {
             button.resize((widest, button.dimensions.1));
         }
+    }
+
+    /// Adds an external draw call to be executed before the GuiHandler itself is drawn. This fixes
+    /// an issue where things that would be drawn external of the GuiHandler have to be drawn over
+    /// the GuiHandler.
+    pub fn add_external_draw(&mut self, external_draw: Box<DrawAction>) -> &mut Self {
+        self.additional_draws.push(external_draw);
+
+        self
     }
 
     /// Sets the function that will be called everytime any button is pressed.
@@ -149,6 +161,11 @@ impl<T> GuiHandler<T> {
         }
 
         draw_handler.clear_background(self.clear_colour);
+
+        for draw_action in self.additional_draws.iter_mut() {
+            (draw_action)(&mut draw_handler);
+        }
+
         for button in self.buttons.iter_mut() {
             button.draw(&mut draw_handler);
             self.actions.push(button.is_clicked(

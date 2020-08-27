@@ -9,8 +9,12 @@ readme = "../README.md"
 
 [dependencies]
 raylib = {git = "https://github.com/deltaphc/raylib-rs", branch = "three"}
-ptgui = { version = "0.1.0", path = "../" }
+ptgui = {version = "0.1.1", path = "../"}
 
 [[bin]]
 name = "button-sample"
 path = "src/button_test.rs"
+
+[[bin]]
+name = "button-sample-additional-draw"
+path = "src/button_with_additional_draws.rs"
