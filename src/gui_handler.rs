@@ -74,8 +74,10 @@ impl<T> GuiHandler<T> {
     /// ```
     /// Your code:
     /// ```
-    /// let mut g_handler = GuiHandler::new(draw_handler, Colour::WHITE);
-    /// g_handler.set_button_action_function(change_state)
+    /// use ptgui::prelude::*;
+    ///
+    /// let mut g_handler = GuiHandler::new(Colour::WHITE);
+    /// g_handler.set_button_action_function(change_state);
     /// ```
     pub fn set_button_action_function(&mut self, function: Box<Action<T>>) -> &mut Self {
         self.has_set_button_action = true;
