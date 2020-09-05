@@ -44,6 +44,13 @@ impl<T> GuiHandler<T> {
         }
     }
 
+    /// Clears the external draw call vector.
+    pub fn clear_external_draws(&mut self) -> &mut Self {
+        self.additional_draws.clear();
+
+        self
+    }
+
     /// Adds an external draw call to be executed before the GuiHandler itself is drawn. This fixes
     /// an issue where things that would be drawn external of the GuiHandler have to be drawn over
     /// the GuiHandler.
