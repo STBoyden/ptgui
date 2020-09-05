@@ -13,6 +13,9 @@ impl External {
     fn new() -> External {
         External {}
     }
+}
+
+impl Drawable for External {
     fn draw(&mut self, draw_func: &mut RaylibDrawHandle) {
         draw_func.draw_ellipse(
             draw_func.get_mouse_x(),
@@ -28,7 +31,7 @@ fn main() {
     let (mut rl_handler, rl_thread) = raylib::init().size(1280, 720).title("Button Test").build();
     rl_handler.set_target_fps(60);
     let mut state = State::None;
-    let mut external = External::new();
+    let external = External::new();
 
     let mut g_handler = GuiHandler::new(Colour::WHITE);
     g_handler
@@ -38,13 +41,13 @@ fn main() {
         .add_button("Hello again again", "print_word")
         .add_button_with_position("Oop I'm over here now", "", (600, 100))
         .add_button("Wooop", "")
-        .add_external_draw(Box::new(move |df| external.draw(df))) // <- add a new external draw
+        .add_external_draw(Box::new(external)) // <- add a new external draw
         .set_button_fix_widths(true)
-        .set_button_action_function(Box::new(|state: &mut State, action: &str| match action {
+        .set_button_action_function(|state, action| match action {
             "quit" => *state = State::Quit,
             "print_word" => *state = State::PrintWord,
             _ => {}
-        }));
+        });
 
     while !rl_handler.window_should_close() && state != State::Quit {
         let mut draw_handler = g_handler

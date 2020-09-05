@@ -22,11 +22,11 @@ fn main() {
         .add_button_with_position("Oop I'm over here now", "", (600, 100))
         .add_button("Wooop", "")
         .set_button_fix_widths(true)
-        .set_button_action_function(Box::new(|state: &mut State, action: &str| match action {
+        .set_button_action_function(|state, action| match action {
             "quit" => *state = State::Quit,
             "print_word" => *state = State::PrintWord,
             _ => {}
-        }));
+        });
 
     while !rl_handler.window_should_close() && state != State::Quit {
         let mut draw_handler = g_handler

@@ -8,8 +8,8 @@ readme = "../README.md"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-raylib = {git = "https://github.com/deltaphc/raylib-rs"}
-ptgui = {version = "0.1.1", path = "../"}
+raylib = "3.0.0"
+ptgui = {path = "../"}
 
 [[bin]]
 name = "button-sample"

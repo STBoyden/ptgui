@@ -2,18 +2,15 @@ use crate::prelude::*;
 use raylib::prelude::*;
 use std::cell::Cell;
 
-type Action<T> = dyn Fn(&mut T, &str) -> ();
-type DrawAction = dyn FnMut(&mut RaylibDrawHandle) -> ();
-
 /// The default `struct` to handle the GUI system implemented by the `ptgui` crate.
 pub struct GuiHandler<T> {
     can_draw: Cell<bool>,
     clear_colour: Colour,
     button_fixed_width: bool,
     buttons: Vec<Button>,
-    button_action: Box<Action<T>>,
+    button_action: Action<T>,
     actions: Vec<String>,
-    additional_draws: Vec<Box<DrawAction>>,
+    additional_draws: Vec<Box<dyn Drawable>>,
     has_set_button_action: bool,
 }
 
@@ -25,7 +22,7 @@ impl<T> GuiHandler<T> {
             clear_colour,
             button_fixed_width: false,
             buttons: Vec::new(),
-            button_action: Box::new(|_, _| {}),
+            button_action: |_, _| {},
             actions: Vec::new(),
             additional_draws: Vec::new(),
             has_set_button_action: false,
@@ -50,7 +47,7 @@ impl<T> GuiHandler<T> {
     /// Adds an external draw call to be executed before the GuiHandler itself is drawn. This fixes
     /// an issue where things that would be drawn external of the GuiHandler have to be drawn over
     /// the GuiHandler.
-    pub fn add_external_draw(&mut self, external_draw: Box<DrawAction>) -> &mut Self {
+    pub fn add_external_draw(&mut self, external_draw: Box<dyn Drawable>) -> &mut Self {
         self.additional_draws.push(external_draw);
 
         self
@@ -75,11 +72,14 @@ impl<T> GuiHandler<T> {
     /// Your code:
     /// ```
     /// use ptgui::prelude::*;
+    /// fn main() {
+    ///     // ...
+    ///     let mut g_handler = GuiHandler::new(Colour::WHITE);
+    ///     g_handler.set_button_action_function(change_state);
+    /// }
     ///
-    /// let mut g_handler = GuiHandler::new(Colour::WHITE);
-    /// g_handler.set_button_action_function(change_state);
     /// ```
-    pub fn set_button_action_function(&mut self, function: Box<Action<T>>) -> &mut Self {
+    pub fn set_button_action_function(&mut self, function: Action<T>) -> &mut Self {
         self.has_set_button_action = true;
         self.button_action = function;
 
@@ -164,8 +164,8 @@ impl<T> GuiHandler<T> {
 
         draw_handler.clear_background(self.clear_colour);
 
-        for draw_action in self.additional_draws.iter_mut() {
-            (draw_action)(&mut draw_handler);
+        for drawable in self.additional_draws.iter_mut() {
+            drawable.draw(&mut draw_handler);
         }
 
         for button in self.buttons.iter_mut() {
