@@ -1,3 +1,4 @@
+use crate::gui_component::*;
 use crate::prelude::*;
 use raylib::prelude::*;
 use std::cell::Cell;

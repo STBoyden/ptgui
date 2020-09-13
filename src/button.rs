@@ -1,5 +1,7 @@
+use crate::gui_component::GuiComponentBehaviour;
 use crate::prelude::{
-    is_inside, state_get_colour, Colour, Dimensions, GuiComponentBehaviour, Point, StateColour,
+    is_inside, state_get_colour, Colour, Dimensions, DrawableType, InternalDrawable, Point,
+    StateColour,
 };
 use raylib::prelude::text::measure_text;
 use raylib::prelude::*;
@@ -11,6 +13,25 @@ pub struct Button {
     pub position: Point,
     pub dimensions: Dimensions,
     colour: Colour,
+}
+
+impl InternalDrawable for Button {
+    fn get_position(&self) -> Point {
+        self.position
+    }
+
+    fn get_dimensions(&self) -> Dimensions {
+        self.dimensions
+    }
+
+    fn get_type(&self) -> DrawableType {
+        DrawableType::Button
+    }
+
+    /// Resizes the button to the given `new_dimensions`.
+    fn resize(&mut self, new_dimensions: Dimensions) {
+        self.dimensions = new_dimensions;
+    }
 }
 
 impl Button {
@@ -54,11 +75,6 @@ impl Button {
 
         &*self
     }
-
-    /// Resizes the button to the given `new_dimensions`.
-    pub fn resize(&mut self, new_dimensions: Dimensions) {
-        self.dimensions = new_dimensions;
-    }
 }
 
 impl GuiComponentBehaviour<String> for Button {
@@ -96,6 +112,7 @@ impl GuiComponentBehaviour<String> for Button {
         }
     }
 
+    /// Checks whether or not the user is clicking on the button.
     fn is_clicked(&mut self, mouse_position: Point, is_clicked: bool) -> String {
         if is_inside(self.position, self.dimensions, mouse_position) && is_clicked {
             self.action_string.to_string()
