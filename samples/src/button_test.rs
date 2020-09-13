@@ -21,7 +21,7 @@ fn main() {
         .add_button("Hello again again", "print_word")
         .add_button_with_position("Oop I'm over here now", "", (600, 100))
         .add_button("Wooop", "")
-        .set_button_fix_widths(true)
+        .set_component_fix_widths(true)
         .set_button_action_function(|state, action| match action {
             "quit" => *state = State::Quit,
             "print_word" => *state = State::PrintWord,
