@@ -18,3 +18,7 @@ path = "src/button_test.rs"
 [[bin]]
 name = "button-sample-additional-draw"
 path = "src/button_with_additional_draws.rs"
+
+[[bin]]
+name = "slider-sample"
+path = "src/slider_example.rs"

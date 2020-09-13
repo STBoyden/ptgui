@@ -7,8 +7,8 @@ use std::cell::Cell;
 pub struct GuiHandler<T> {
     can_draw: Cell<bool>,
     clear_colour: Colour,
-    button_fixed_width: bool,
-    buttons: Vec<Button>,
+    component_fixed_width: bool,
+    components: Vec<Box<dyn InternalDrawable>>,
     button_action: Action<T>,
     actions: Vec<String>,
     additional_draws: Vec<Box<dyn Drawable>>,
@@ -21,8 +21,8 @@ impl<T> GuiHandler<T> {
         GuiHandler {
             can_draw: Cell::new(true),
             clear_colour,
-            button_fixed_width: false,
-            buttons: Vec::new(),
+            component_fixed_width: false,
+            components: Vec::new(),
             button_action: |_, _| {},
             actions: Vec::new(),
             additional_draws: Vec::new(),
@@ -30,18 +30,18 @@ impl<T> GuiHandler<T> {
         }
     }
 
-    fn button_fix_widths(&mut self) {
+    fn components_fix_widths(&mut self) {
         let mut widest = -1;
 
-        for button in self.buttons.iter() {
-            let width = button.dimensions.0;
+        for component in self.components.iter() {
+            let width = component.get_dimensions().0;
             if width > widest {
                 widest = width;
             }
         }
 
-        for button in self.buttons.iter_mut() {
-            button.resize((widest, button.dimensions.1));
+        for component in self.components.iter_mut() {
+            component.resize((widest, component.get_dimensions().1));
         }
     }
 
@@ -94,10 +94,10 @@ impl<T> GuiHandler<T> {
         self
     }
 
-    /// Makes it so that when buttons are drawn, that they are all drawn at the same width so that
+    /// Makes it so that when components are drawn, that they are all drawn at the same width so that
     /// they are uniform.
-    pub fn set_button_fix_widths(&mut self, value: bool) -> &mut Self {
-        self.button_fixed_width = value;
+    pub fn set_component_fix_widths(&mut self, value: bool) -> &mut Self {
+        self.component_fixed_width = value;
 
         self
     }
@@ -109,7 +109,8 @@ impl<T> GuiHandler<T> {
         action: &str,
         position: Point,
     ) -> &mut Self {
-        self.buttons.push(Button::new(text, action, 20, position));
+        self.components
+            .push(Box::new(Button::new(text, action, 20, position)));
 
         self
     }
@@ -119,18 +120,20 @@ impl<T> GuiHandler<T> {
     /// are present then the first button is placed at (0, 0). If a button already exists then
     /// the buttons created afterwards are placed n+50 pixels below the first button.
     pub fn add_button(&mut self, text: &str, action: &str) -> &mut Self {
-        if !self.buttons.is_empty() {
-            self.buttons.push(Button::new(
+        if !self.components.is_empty() {
+            self.components.push(Box::new(Button::new(
                 text,
                 action,
                 20,
                 (
-                    self.buttons[self.buttons.len() - 1].position.0,
-                    self.buttons[self.buttons.len() - 1].position.1 + self.buttons[0].dimensions.1,
+                    self.components[self.components.len() - 1].get_position().0,
+                    self.components[self.components.len() - 1].get_position().1
+                        + self.components[0].get_dimensions().1,
                 ),
-            ));
+            )));
         } else {
-            self.buttons.push(Button::new(text, action, 20, (0, 0)));
+            self.components
+                .push(Box::new(Button::new(text, action, 20, (0, 0))));
         }
 
         self
@@ -143,6 +146,78 @@ impl<T> GuiHandler<T> {
         }
 
         self
+    }
+
+    /// Adds a `Slider` to the `GuiHandler` with a given `position`.
+    pub fn add_slider_with_position(
+        &mut self,
+        min: i32,
+        max: i32,
+        initial_value: f32,
+        position: Point,
+    ) -> &mut Self {
+        self.components.push(Box::new(Slider::new(
+            min,
+            max,
+            initial_value,
+            position,
+            100,
+        )));
+
+        self
+    }
+
+    /// Adds a slider to the `GuiHandler` with automatic positioning. It's automatic position is
+    /// determined by whether or not there are sliders already added. For example, if no sliders
+    /// are present then the first slider is placed at (0, 0). If a slider already exists then
+    /// the sliders created afterwards are placed n+30 pixels below the first slider.
+    pub fn add_slider(&mut self, min: i32, max: i32, initial_value: f32) -> &mut Self {
+        if !self.components.is_empty() {
+            self.components.push(Box::new(Slider::new(
+                min,
+                max,
+                initial_value,
+                (
+                    self.components[self.components.len() - 1].get_position().0,
+                    self.components[self.components.len() - 1].get_position().1
+                        + self.components[self.components.len() - 1]
+                            .get_dimensions()
+                            .1, // + 10,
+                ),
+                250,
+            )));
+        } else {
+            self.components
+                .push(Box::new(Slider::new(min, max, initial_value, (0, 0), 250)));
+        }
+
+        self
+    }
+
+    /// Gets the value of a specified `Slider` via an index, returning a `f32`.
+    pub fn get_slider_value<'a>(&self, index: usize) -> Result<f32, String> {
+        let mut sliders = vec![];
+
+        self.components.iter().for_each(|c| {
+            if c.get_type() == DrawableType::Slider {
+                sliders.push(unsafe {
+                    std::mem::transmute::<&Box<dyn InternalDrawable>, &Box<Slider>>(c)
+                });
+            }
+        });
+
+        if index > sliders.len() {
+            return Err(
+                "Cannot return the value of a Slider that is out of index range".to_string(),
+            );
+        }
+
+        Ok(sliders[index].get_value())
+    }
+
+    /// Gets the value of a specified `Slider` via an index, returning an `i32`.
+    pub fn get_slider_value_i32<'a>(&self, index: usize) -> Result<i32, String> {
+        Ok(self.get_slider_value(index).ok().unwrap() as i32)
     }
 
     /// Draws the `GuiHandler` to the screen.
@@ -162,12 +237,19 @@ impl<T> GuiHandler<T> {
             return Err("Cannot draw. Draw handler was released.");
         }
 
-        if !self.has_set_button_action {
+        let mut has_buttons = false;
+        self.components.iter().for_each(|c| {
+            if c.get_type() == DrawableType::Button {
+                has_buttons = true
+            }
+        });
+
+        if !self.has_set_button_action && has_buttons {
             return Err("Cannot draw. Actions function for buttons has not been set.");
         }
 
-        if self.button_fixed_width {
-            self.button_fix_widths();
+        if self.component_fixed_width {
+            self.components_fix_widths();
         }
 
         draw_handler.clear_background(self.clear_colour);
@@ -176,12 +258,40 @@ impl<T> GuiHandler<T> {
             drawable.draw(&mut draw_handler);
         }
 
-        for button in self.buttons.iter_mut() {
-            button.draw(&mut draw_handler);
-            self.actions.push(button.is_clicked(
-                mouse_position,
-                draw_handler.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON),
-            ));
+        for component in self.components.iter_mut() {
+            // SAFETY: It is made sure that the type of the component is correct before it
+            // is transmuted to the appropriate component type.
+            //
+            // TODO: Find a way to do this in safe Rust. Though I know this is safe, I would prefer
+            // a safe Rust alternative.
+            unsafe {
+                match component.get_type() {
+                    DrawableType::Button => {
+                        let button = std::mem::transmute::<
+                            &mut Box<dyn InternalDrawable>,
+                            &mut Box<Button>,
+                        >(component);
+
+                        button.draw(&mut draw_handler);
+                        self.actions.push(button.is_clicked(
+                            mouse_position,
+                            draw_handler.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON),
+                        ));
+                    }
+                    DrawableType::Slider => {
+                        let slider = std::mem::transmute::<
+                            &mut Box<dyn InternalDrawable>,
+                            &mut Box<Slider>,
+                        >(component);
+
+                        slider.draw(&mut draw_handler);
+                        slider.is_clicked(
+                            mouse_position,
+                            draw_handler.is_mouse_button_down(MouseButton::MOUSE_LEFT_BUTTON),
+                        );
+                    }
+                }
+            }
         }
 
         // SAFETY: makes sure that the draw_handler is returned to the correct scope.
