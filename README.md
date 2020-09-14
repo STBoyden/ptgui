@@ -9,5 +9,7 @@ a Raylib Rust-based games.
 
 ## Examples (`samples/`)
 Button sample: `cargo run --release --bin button-sample`
+
 Button sample with external draws: `cargo run --release --bin button-sample-additional-draw`
+
 Slider sample: `cargo run --release --bin slider-sample`
