@@ -2,11 +2,9 @@ use crate::common::*;
 use crate::gui_component::*;
 use crate::prelude::*;
 use raylib::prelude::*;
-use std::cell::Cell;
 
 /// The default `struct` to handle the GUI system implemented by the `ptgui` crate.
 pub struct GuiHandler<T> {
-    can_draw: Cell<bool>,
     clear_colour: Colour,
     component_fixed_width: bool,
     components: Vec<DrawableType>,
@@ -20,7 +18,6 @@ impl<T> GuiHandler<T> {
     /// Creates a new `GuiHandler<T>`.
     pub fn new(clear_colour: Colour) -> GuiHandler<T> {
         GuiHandler {
-            can_draw: Cell::new(true),
             clear_colour,
             component_fixed_width: false,
             components: Vec::new(),
@@ -249,10 +246,6 @@ impl<T> GuiHandler<T> {
         }
 
         let mouse_position = (draw_handler.get_mouse_x(), draw_handler.get_mouse_y());
-
-        if !self.can_draw.get() {
-            return Err("Cannot draw. Draw handler was released.");
-        }
 
         let buttons = self
             .components
