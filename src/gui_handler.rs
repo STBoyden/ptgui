@@ -225,7 +225,10 @@ impl<T> GuiHandler<T> {
 
     /// Gets the value of a specified `Slider` via an index, returning an `i32`.
     pub fn get_slider_value_i32(&self, index: usize) -> Result<i32, String> {
-        Ok(self.get_slider_value(index).ok().unwrap() as i32)
+        match self.get_slider_value(index) {
+            Ok(v) => Ok(v as i32),
+            Err(e) => Err(e),
+        }
     }
 
     /// Draws the `GuiHandler` to the screen.
