@@ -1,11 +1,11 @@
+use crate::common::*;
 use crate::gui_component::GuiComponentBehaviour;
-use crate::prelude::{
-    is_inside, state_get_colour, Colour, Dimensions, DrawableType, InternalDrawable, Point,
-    StateColour,
-};
+use crate::prelude::{state_get_colour, Colour, Dimensions, Point, StateColour};
 use raylib::prelude::text::measure_text;
 use raylib::prelude::*;
+use std::iter::FromIterator;
 
+#[derive(PartialEq)]
 pub struct Button {
     text: String,
     action_string: String,
@@ -13,25 +13,6 @@ pub struct Button {
     pub position: Point,
     pub dimensions: Dimensions,
     colour: Colour,
-}
-
-impl InternalDrawable for Button {
-    fn get_position(&self) -> Point {
-        self.position
-    }
-
-    fn get_dimensions(&self) -> Dimensions {
-        self.dimensions
-    }
-
-    fn get_type(&self) -> DrawableType {
-        DrawableType::Button
-    }
-
-    /// Resizes the button to the given `new_dimensions`.
-    fn resize(&mut self, new_dimensions: Dimensions) {
-        self.dimensions = new_dimensions;
-    }
 }
 
 impl Button {
@@ -74,6 +55,11 @@ impl Button {
         self.resize((new_width, self.dimensions.1));
 
         &*self
+    }
+
+    /// Resizes the button to the given `new_dimensions`.
+    pub fn resize(&mut self, new_dimensions: Dimensions) {
+        self.dimensions = new_dimensions;
     }
 }
 
@@ -119,5 +105,20 @@ impl GuiComponentBehaviour<String> for Button {
         } else {
             "".to_string()
         }
+    }
+}
+
+impl FromIterator<DrawableType> for Vec<Button> {
+    fn from_iter<T: IntoIterator<Item = DrawableType>>(iter: T) -> Self {
+        let mut c = Vec::new();
+
+        for i in iter {
+            match i {
+                DrawableType::Button(s) => c.push(s),
+                _ => {}
+            }
+        }
+
+        c
     }
 }

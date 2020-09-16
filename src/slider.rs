@@ -1,11 +1,10 @@
+use crate::common::*;
 use crate::gui_component::GuiComponentBehaviour;
-use crate::prelude::{
-    is_inside, state_get_colour, Colour, Dimensions, DrawableType, InternalDrawable, Point,
-    StateColour,
-};
+use crate::prelude::{state_get_colour, Colour, Dimensions, Point, StateColour};
 use raylib::prelude::*;
+use std::iter::FromIterator;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 pub struct Slider {
     max: i32,
     min: i32,
@@ -20,26 +19,6 @@ pub struct Slider {
     slider_text_colour: Colour,
     slider_box_colour: Colour,
     background_colour: Colour,
-}
-
-impl InternalDrawable for Slider {
-    fn get_position(&self) -> Point {
-        self.position
-    }
-
-    fn get_dimensions(&self) -> Dimensions {
-        self.dimensions
-    }
-
-    fn get_type(&self) -> DrawableType {
-        DrawableType::Slider
-    }
-
-    fn resize(&mut self, new_dimensions: Dimensions) {
-        self.dimensions = new_dimensions;
-        self.slider_dimensions = (new_dimensions.0 - 120, new_dimensions.1 - 15);
-        self.slider_box_dimensions = (self.slider_box_dimensions.0, new_dimensions.1 - 15);
-    }
 }
 
 impl Slider {
@@ -79,8 +58,6 @@ impl Slider {
             / (self.max - self.min) as f32)
             * ((self.slider_position.0 + self.slider_dimensions.0) - self.slider_position.0) as f32
             + self.slider_position.0 as f32) as i32;
-
-        self.update_value();
     }
 
     fn update_value(&mut self) {
@@ -96,6 +73,13 @@ impl Slider {
     /// Returns the value of the current `Slider`.
     pub fn get_value(&self) -> f32 {
         self.value
+    }
+
+    /// Resizes the slider to `new_dimensions` and resizes it's components proportionally.
+    pub fn resize(&mut self, new_dimensions: Dimensions) {
+        self.dimensions = new_dimensions;
+        self.slider_dimensions = (new_dimensions.0 - 120, new_dimensions.1 - 15);
+        self.slider_box_dimensions = (self.slider_box_dimensions.0, new_dimensions.1 - 15);
     }
 }
 
@@ -178,5 +162,20 @@ impl GuiComponentBehaviour<()> for Slider {
 
             self.update_value();
         }
+    }
+}
+
+impl FromIterator<DrawableType> for Vec<Slider> {
+    fn from_iter<T: IntoIterator<Item = DrawableType>>(iter: T) -> Self {
+        let mut c = Vec::new();
+
+        for i in iter {
+            match i {
+                DrawableType::Slider(s) => c.push(s),
+                _ => {}
+            }
+        }
+
+        c
     }
 }
