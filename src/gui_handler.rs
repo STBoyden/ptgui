@@ -241,9 +241,8 @@ impl<T> GuiHandler<T> {
         rl_thread: &RaylibThread,
     ) -> Result<RaylibDrawHandle<'a>, &str> {
         let mut draw_handler = rl_handler.begin_drawing(&rl_thread);
-        if !self.actions.is_empty() {
-            self.actions = vec![];
-        }
+
+        self.actions.clear();
 
         let mouse_position = (draw_handler.get_mouse_x(), draw_handler.get_mouse_y());
 
