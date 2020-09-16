@@ -84,13 +84,8 @@ impl<T> GuiHandler<T> {
     /// ```
     /// Your code:
     /// ```
-    /// use ptgui::prelude::*;
-    /// fn main() {
-    ///     // ...
-    ///     let mut g_handler = GuiHandler::new(Colour::WHITE);
-    ///     g_handler.set_button_action_function(change_state);
-    /// }
-    ///
+    /// let mut g_handler = GuiHandler::new(Colour::WHITE);
+    /// g_handler.set_button_action_function(change_state);
     /// ```
     pub fn set_button_action_function(&mut self, function: Action<T>) -> &mut Self {
         self.has_set_button_action = true;
@@ -132,7 +127,7 @@ impl<T> GuiHandler<T> {
             None => (0, 50),
         };
 
-        let previous_position = match self.components.get(self.components.len() - 1) {
+        let previous_position = match self.components.last() {
             Some(DrawableType::Button(b)) => b.position,
             Some(DrawableType::Slider(s)) => s.position,
             None => (0, 0),
@@ -190,7 +185,7 @@ impl<T> GuiHandler<T> {
             None => (0, 50),
         };
 
-        let previous_position = match self.components.get(self.components.len() - 1) {
+        let previous_position = match self.components.last() {
             Some(DrawableType::Button(b)) => b.position,
             Some(DrawableType::Slider(s)) => s.position,
             None => (0, 0),
@@ -211,12 +206,11 @@ impl<T> GuiHandler<T> {
     }
 
     /// Gets the value of a specified `Slider` via an index, returning a `f32`.
-    pub fn get_slider_value<'a>(&self, index: usize) -> Result<f32, String> {
+    pub fn get_slider_value(&self, index: usize) -> Result<f32, String> {
         let mut sliders = vec![];
         for c in self.components.iter() {
-            match c {
-                DrawableType::Slider(s) => sliders.push(s),
-                _ => {}
+            if let DrawableType::Slider(s) = c {
+                sliders.push(s)
             }
         }
 
@@ -230,7 +224,7 @@ impl<T> GuiHandler<T> {
     }
 
     /// Gets the value of a specified `Slider` via an index, returning an `i32`.
-    pub fn get_slider_value_i32<'a>(&self, index: usize) -> Result<i32, String> {
+    pub fn get_slider_value_i32(&self, index: usize) -> Result<i32, String> {
         Ok(self.get_slider_value(index).ok().unwrap() as i32)
     }
 

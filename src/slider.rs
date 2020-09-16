@@ -170,9 +170,8 @@ impl FromIterator<DrawableType> for Vec<Slider> {
         let mut c = Vec::new();
 
         for i in iter {
-            match i {
-                DrawableType::Slider(s) => c.push(s),
-                _ => {}
+            if let DrawableType::Slider(s) = i {
+                c.push(s)
             }
         }
 

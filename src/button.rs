@@ -113,9 +113,8 @@ impl FromIterator<DrawableType> for Vec<Button> {
         let mut c = Vec::new();
 
         for i in iter {
-            match i {
-                DrawableType::Button(s) => c.push(s),
-                _ => {}
+            if let DrawableType::Button(s) = i {
+                c.push(s)
             }
         }
 
