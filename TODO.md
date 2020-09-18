@@ -2,7 +2,7 @@
 
 - [x] Button
 - [x] Slider
-- [ ] Dropdown
+- [x] Dropdown
 - [ ] Text box
 - [ ] Scroll bar
 - [ ] Checkbox
