@@ -9,7 +9,7 @@ pub struct GuiHandler<T> {
     additional_draws: Vec<Box<dyn Drawable>>,
     button_action: Action<T>,
     clear_colour: Colour,
-    component_fixed_width: bool,
+    components_fixed_widths: bool,
     components: Vec<DrawableType>,
     has_set_button_action: bool,
 }
@@ -24,6 +24,7 @@ impl<T> GuiHandler<T> {
             button_action: |_, _| {},
             actions: Vec::new(),
             additional_draws: Vec::new(),
+            components_fixed_widths: false,
             has_set_button_action: false,
         }
     }
@@ -96,8 +97,8 @@ impl<T> GuiHandler<T> {
 
     /// Makes it so that when components are drawn, that they are all drawn at the same width so that
     /// they are uniform.
-    pub fn set_component_fix_widths(&mut self, value: bool) -> &mut Self {
-        self.component_fixed_width = value;
+    pub fn set_components_fix_widths(&mut self, value: bool) -> &mut Self {
+        self.components_fixed_widths = value;
 
         self
     }
@@ -255,7 +256,7 @@ impl<T> GuiHandler<T> {
             return Err("Cannot draw. Actions function for buttons has not been set.");
         }
 
-        if self.component_fixed_width {
+        if self.components_fixed_widths {
             self.components_fix_widths();
         }
 

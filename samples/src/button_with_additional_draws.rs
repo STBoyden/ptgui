@@ -42,7 +42,7 @@ fn main() {
         .add_button_with_position("Oop I'm over here now", "", (600, 100))
         .add_button("Wooop", "")
         .add_external_draw(Box::new(external)) // <- add a new external draw
-        .set_component_fix_widths(true)
+        .set_components_fix_widths(true)
         .set_button_action_function(|state, action| match action {
             "quit" => *state = State::Quit,
             "print_word" => *state = State::PrintWord,

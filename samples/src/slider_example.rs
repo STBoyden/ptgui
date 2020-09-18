@@ -11,7 +11,7 @@ fn main() {
         .add_slider(0, 10, 0.0)
         .add_slider_with_position(69, 420, 0.0, (500, 0))
         .add_slider(10, 20, 10.0)
-        .set_component_fix_widths(true);
+        .set_components_fix_widths(true);
 
     while !rl_handler.window_should_close() {
         println!(
