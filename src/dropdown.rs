@@ -54,7 +54,7 @@ impl Dropdown {
 
     /// Makes it so that when components are drawn, that they are all drawn at the same width so that
     /// they are uniform.
-    pub fn set_component_fix_widths(&mut self, value: bool) -> &mut Self {
+    pub fn set_components_fix_widths(&mut self, value: bool) -> &mut Self {
         self.components_fixed_widths = value;
 
         self
