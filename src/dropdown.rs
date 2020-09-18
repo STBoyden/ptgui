@@ -122,7 +122,18 @@ impl Dropdown {
             text,
             action,
             20,
-            (previous_position.0 + new_x, previous_position.1),
+            (
+                previous_position.0 + new_x,
+                previous_position.1
+                    + match self.components.first() {
+                        Some(c) => match c {
+                            DrawableType::Button(b) => b.dimensions.1,
+                            DrawableType::Slider(s) => s.dimensions.1,
+                            DrawableType::Dropdown(d) => d.dimensions.1,
+                        },
+                        None => 0,
+                    },
+            ),
         )));
 
         self
@@ -140,7 +151,18 @@ impl Dropdown {
             min,
             max,
             initial_value,
-            (previous_position.0 + new_x, previous_position.1),
+            (
+                previous_position.0 + new_x,
+                previous_position.1
+                    + match self.components.first() {
+                        Some(c) => match c {
+                            DrawableType::Button(b) => b.dimensions.1,
+                            DrawableType::Slider(s) => s.dimensions.1,
+                            DrawableType::Dropdown(d) => d.dimensions.1,
+                        },
+                        None => 0,
+                    },
+            ),
             250,
         )));
 
@@ -184,7 +206,18 @@ impl Dropdown {
         self.components.push(DrawableType::Dropdown(Dropdown::new(
             text,
             20,
-            (previous_position.0 + new_x, previous_position.1),
+            (
+                previous_position.0 + new_x,
+                previous_position.1
+                    + match self.components.first() {
+                        Some(c) => match c {
+                            DrawableType::Button(b) => b.dimensions.1,
+                            DrawableType::Slider(s) => s.dimensions.1,
+                            DrawableType::Dropdown(d) => d.dimensions.1,
+                        },
+                        None => 0,
+                    },
+            ),
         )));
 
         self
