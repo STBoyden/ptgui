@@ -7,12 +7,12 @@ use std::iter::FromIterator;
 
 #[derive(PartialEq)]
 pub struct Button {
-    text: String,
     action_string: String,
-    font_size: i32,
-    pub position: Point,
-    pub dimensions: Dimensions,
     colour: Colour,
+    font_size: i32,
+    pub dimensions: Dimensions,
+    pub position: Point,
+    text: String,
 }
 
 impl Button {

@@ -5,12 +5,12 @@ use raylib::prelude::*;
 
 /// The default `struct` to handle the GUI system implemented by the `ptgui` crate.
 pub struct GuiHandler<T> {
+    actions: Vec<String>,
+    additional_draws: Vec<Box<dyn Drawable>>,
+    button_action: Action<T>,
     clear_colour: Colour,
     component_fixed_width: bool,
     components: Vec<DrawableType>,
-    button_action: Action<T>,
-    actions: Vec<String>,
-    additional_draws: Vec<Box<dyn Drawable>>,
     has_set_button_action: bool,
 }
 

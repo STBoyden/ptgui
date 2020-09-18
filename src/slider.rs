@@ -6,19 +6,19 @@ use std::iter::FromIterator;
 
 #[derive(Copy, Clone, PartialEq)]
 pub struct Slider {
+    background_colour: Colour,
     max: i32,
     min: i32,
-    value: f32,
-    pub position: Point,
     pub dimensions: Dimensions,
-    slider_position: Point,
-    slider_dimensions: Dimensions,
-    slider_box_position: Point,
-    slider_box_dimensions: Dimensions,
+    pub position: Point,
     slider_background_colour: Colour,
-    slider_text_colour: Colour,
     slider_box_colour: Colour,
-    background_colour: Colour,
+    slider_box_dimensions: Dimensions,
+    slider_box_position: Point,
+    slider_dimensions: Dimensions,
+    slider_position: Point,
+    slider_text_colour: Colour,
+    value: f32,
 }
 
 impl Slider {
