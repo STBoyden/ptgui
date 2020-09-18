@@ -86,7 +86,7 @@ impl Dropdown {
 
     /// Resizes the `Dropdown` to given `new_dimensions`.
     pub fn resize(&mut self, new_dimensions: Dimensions) {
-        self.dimensions = (new_dimensions.0 - 10, new_dimensions.1);
+        self.dimensions = new_dimensions;
         let new_x_pos = self.position.0 + 10 + self.dimensions.0;
 
         for component in self.components.iter_mut() {
