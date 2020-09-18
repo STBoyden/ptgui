@@ -33,19 +33,19 @@ impl Slider {
         }
 
         let mut s = Self {
+            background_colour: state_get_colour(StateColour::Default),
+            dimensions: (width + 120, 50),
             max,
             min,
-            value: initial_value,
             position,
-            dimensions: (width + 120, 50),
-            slider_position: (position.0 + 10, position.1 + 7),
-            slider_dimensions: (width, 35),
+            slider_background_colour: Colour::LIGHTGRAY,
+            slider_box_colour: state_get_colour(StateColour::Text),
             slider_box_dimensions: (30, 35),
             slider_box_position: (position.0 + 10, position.1 + 7),
-            slider_box_colour: state_get_colour(StateColour::Text),
+            slider_dimensions: (width, 35),
+            slider_position: (position.0 + 10, position.1 + 7),
             slider_text_colour: state_get_colour(StateColour::Text),
-            slider_background_colour: Colour::LIGHTGRAY,
-            background_colour: state_get_colour(StateColour::Default),
+            value: initial_value,
         };
 
         s.set_position_from_value();
@@ -68,6 +68,14 @@ impl Slider {
             / (self.slider_dimensions.0 - self.slider_box_dimensions.0) as f32)
             * (self.max - self.min) as f32
             + self.min as f32;
+    }
+
+    /// Shifts the `Slider` and all it's elements proportionally to the `new_x`.
+    pub fn move_x(&mut self, new_x: i32) {
+        self.position.0 = new_x;
+        let difference = self.slider_box_position.0 - self.slider_position.0;
+        self.slider_box_position.0 = difference + new_x + 10;
+        self.slider_position.0 = new_x + 10;
     }
 
     /// Returns the value of the current `Slider`.
