@@ -121,17 +121,8 @@ impl<T> GuiHandler<T> {
     /// are present then the first `Button` is placed at (0, 0). If a component already exists then
     /// the `Button`s created afterwards are placed n+50 pixels below the first component.
     pub fn add_button(&mut self, text: &str, action: &str) -> &mut Self {
-        let first_dimensions = match self.components.get(0) {
-            Some(DrawableType::Button(b)) => b.dimensions,
-            Some(DrawableType::Slider(s)) => s.dimensions,
-            None => (0, 50),
-        };
-
-        let previous_position = match self.components.last() {
-            Some(DrawableType::Button(b)) => b.position,
-            Some(DrawableType::Slider(s)) => s.position,
-            None => (0, 0),
-        };
+        let first_dimensions = self.get_first_dimensions();
+        let previous_position = self.get_previous_position();
 
         self.components.push(DrawableType::Button(Button::new(
             text,
@@ -179,17 +170,8 @@ impl<T> GuiHandler<T> {
     /// are present then the first `Slider` is placed at (0, 0). If a component already exists then
     /// the `Slider`s created afterwards are placed n+50 pixels below the first component.
     pub fn add_slider(&mut self, min: i32, max: i32, initial_value: f32) -> &mut Self {
-        let first_dimensions = match self.components.get(0) {
-            Some(DrawableType::Button(b)) => b.dimensions,
-            Some(DrawableType::Slider(s)) => s.dimensions,
-            None => (0, 50),
-        };
-
-        let previous_position = match self.components.last() {
-            Some(DrawableType::Button(b)) => b.position,
-            Some(DrawableType::Slider(s)) => s.position,
-            None => (0, 0),
-        };
+        let first_dimensions = self.get_first_dimensions();
+        let previous_position = self.get_previous_position();
 
         self.components.push(DrawableType::Slider(Slider::new(
             min,
@@ -231,6 +213,23 @@ impl<T> GuiHandler<T> {
         }
     }
 
+    fn get_first_dimensions(&self) -> Dimensions {
+        match self.components.get(0) {
+            Some(DrawableType::Button(b)) => b.dimensions,
+            Some(DrawableType::Slider(s)) => s.dimensions,
+            Some(DrawableType::Dropdown(d)) => d.dimensions,
+            None => (0, 50),
+        }
+    }
+
+    fn get_previous_position(&self) -> Point {
+        match self.components.last() {
+            Some(DrawableType::Button(b)) => b.position,
+            Some(DrawableType::Slider(s)) => s.position,
+            Some(DrawableType::Dropdown(d)) => d.position,
+            None => (0, 0),
+        }
+    }
     /// Draws the `GuiHandler` to the screen.
     pub fn draw<'a>(
         &mut self,
