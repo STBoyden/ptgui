@@ -22,3 +22,7 @@ path = "src/button_with_additional_draws.rs"
 [[bin]]
 name = "slider-sample"
 path = "src/slider_example.rs"
+
+[[bin]]
+name = "dropdown-sample"
+path = "src/dropdown_example.rs"

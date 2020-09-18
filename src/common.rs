@@ -20,4 +20,5 @@ pub fn is_inside(position: Point, dimensions: Dimensions, mouse_position: Point)
 pub enum DrawableType {
     Button(Button),
     Slider(Slider),
+    Dropdown(Dropdown),
 }

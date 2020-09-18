@@ -35,6 +35,7 @@ impl<T> GuiHandler<T> {
             let width = match component {
                 DrawableType::Button(b) => b.dimensions.0,
                 DrawableType::Slider(s) => s.dimensions.0,
+                DrawableType::Dropdown(d) => d.dimensions.0,
             };
 
             if width > widest {
@@ -46,6 +47,7 @@ impl<T> GuiHandler<T> {
             match component {
                 DrawableType::Button(b) => b.resize((widest, b.dimensions.1)),
                 DrawableType::Slider(s) => s.resize((widest, s.dimensions.1)),
+                DrawableType::Dropdown(d) => d.resize((widest, d.dimensions.1)),
             }
         }
     }
@@ -230,6 +232,59 @@ impl<T> GuiHandler<T> {
             None => (0, 0),
         }
     }
+
+    /// Adds a `Dropdown` to the `GuiHandler` with automatic positioning. It's automatic position is
+    /// determined by whether or not there are components already added. For example, if no components
+    /// are present then the first `Dropdown` is placed at (0, 0). If a component already exists then
+    /// the `Dropdown`s created afterwards are placed n+50 pixels below the first component.
+    pub fn add_dropdown(&mut self, text: &str) -> &mut Self {
+        let first_dimensions = self.get_first_dimensions();
+        let previous_position = self.get_previous_position();
+
+        self.components.push(DrawableType::Dropdown(Dropdown::new(
+            text,
+            20,
+            (
+                previous_position.0,
+                previous_position.1 + first_dimensions.1,
+            ),
+        )));
+
+        self
+    }
+
+    /// Adds a `Dropdown` to the `GuiHandler` with a given `position`.
+    pub fn add_dropdown_with_position(&mut self, text: &str, position: Point) -> &mut Self {
+        self.components
+            .push(DrawableType::Dropdown(Dropdown::new(text, 20, position)));
+
+        self
+    }
+
+    /// Gets a vector of mutable `Dropdown` references in the components vector,
+    pub fn get_dropdowns_mut(&mut self) -> Result<Vec<&mut Dropdown>, String> {
+        let mut dropdown = vec![];
+        for c in self.components.iter_mut() {
+            if let DrawableType::Dropdown(d) = c {
+                dropdown.push(d)
+            }
+        }
+
+        Ok(dropdown)
+    }
+
+    /// Gets a vector of `Dropdown` references in the components vector,
+    pub fn get_dropdowns(&mut self) -> Result<Vec<&Dropdown>, String> {
+        let mut dropdown = vec![];
+        for c in self.components.iter() {
+            if let DrawableType::Dropdown(d) = c {
+                dropdown.push(d)
+            }
+        }
+
+        Ok(dropdown)
+    }
+
     /// Draws the `GuiHandler` to the screen.
     pub fn draw<'a>(
         &mut self,
@@ -280,6 +335,15 @@ impl<T> GuiHandler<T> {
                         mouse_position,
                         draw_handler.is_mouse_button_down(MouseButton::MOUSE_LEFT_BUTTON),
                     );
+                }
+                DrawableType::Dropdown(d) => {
+                    d.draw(&mut draw_handler);
+                    d.is_clicked(
+                        mouse_position,
+                        draw_handler.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON),
+                    );
+
+                    self.actions.append(&mut d.actions);
                 }
             }
         }

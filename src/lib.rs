@@ -1,5 +1,6 @@
 pub mod button;
 pub mod common;
+pub mod dropdown;
 pub mod gui_component;
 pub mod gui_handler;
 pub mod gui_theme;
