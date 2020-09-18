@@ -16,14 +16,13 @@ pub struct GuiHandler<T> {
 
 impl<T> GuiHandler<T> {
     /// Creates a new `GuiHandler<T>`.
-    pub fn new(clear_colour: Colour) -> GuiHandler<T> {
-        GuiHandler {
-            clear_colour,
-            component_fixed_width: false,
-            components: Vec::new(),
-            button_action: |_, _| {},
+    pub fn new(clear_colour: Colour) -> Self {
+        Self {
             actions: Vec::new(),
             additional_draws: Vec::new(),
+            button_action: |_, _| {},
+            clear_colour,
+            components: Vec::new(),
             components_fixed_widths: false,
             has_set_button_action: false,
         }
@@ -58,8 +57,8 @@ impl<T> GuiHandler<T> {
         self
     }
 
-    /// Adds an external draw call to be executed before the GuiHandler itself is drawn. This fixes
-    /// an issue where things that would be drawn external of the GuiHandler have to be drawn over
+    /// Adds an external draw call to be executed before the `GuiHandler<T>` itself is drawn. This fixes
+    /// an issue where things that would be drawn external of the `GuiHandler<T>` have to be drawn over
     /// the GuiHandler.
     pub fn add_external_draw(&mut self, external_draw: Box<dyn Drawable>) -> &mut Self {
         self.additional_draws.push(external_draw);
