@@ -116,10 +116,10 @@ impl<T> GuiHandler<T> {
         self
     }
 
-    /// Adds a button to the `GuiHandler` with automatic positioning. It's automatic position is
-    /// determined by whether or not there are buttons already added. For example, if no buttons
-    /// are present then the first button is placed at (0, 0). If a button already exists then
-    /// the buttons created afterwards are placed n+50 pixels below the first button.
+    /// Adds a `Button` to the `GuiHandler` with automatic positioning. It's automatic position is
+    /// determined by whether or not there are components already added. For example, if no components
+    /// are present then the first `Button` is placed at (0, 0). If a component already exists then
+    /// the `Button`s created afterwards are placed n+50 pixels below the first component.
     pub fn add_button(&mut self, text: &str, action: &str) -> &mut Self {
         let first_dimensions = match self.components.get(0) {
             Some(DrawableType::Button(b)) => b.dimensions,
@@ -174,10 +174,10 @@ impl<T> GuiHandler<T> {
         self
     }
 
-    /// Adds a slider to the `GuiHandler` with automatic positioning. It's automatic position is
-    /// determined by whether or not there are sliders already added. For example, if no sliders
-    /// are present then the first slider is placed at (0, 0). If a slider already exists then
-    /// the sliders created afterwards are placed n+50 pixels below the first slider.
+    /// Adds a `Slider` to the `GuiHandler` with automatic positioning. It's automatic position is
+    /// determined by whether or not there are components already added. For example, if no components
+    /// are present then the first `Slider` is placed at (0, 0). If a component already exists then
+    /// the `Slider`s created afterwards are placed n+50 pixels below the first component.
     pub fn add_slider(&mut self, min: i32, max: i32, initial_value: f32) -> &mut Self {
         let first_dimensions = match self.components.get(0) {
             Some(DrawableType::Button(b)) => b.dimensions,
