@@ -1,6 +1,4 @@
-use crate::common::*;
-use crate::gui_component::*;
-use crate::prelude::*;
+use crate::{common::*, gui_component::*, prelude::*};
 use raylib::prelude::*;
 
 #[derive(PartialEq)]

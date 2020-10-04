@@ -1,6 +1,4 @@
-use crate::common::*;
-use crate::gui_component::*;
-use crate::prelude::*;
+use crate::{common::*, prelude::*};
 use raylib::prelude::*;
 
 /// The default `struct` to handle the GUI system implemented by the `ptgui` crate.

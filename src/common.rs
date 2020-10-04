@@ -1,4 +1,5 @@
-use crate::prelude::*;
+use crate::{gui_component::*, prelude::*};
+use raylib::prelude::*;
 
 pub fn is_inside(position: Point, dimensions: Dimensions, mouse_position: Point) -> bool {
     let rect_points = [

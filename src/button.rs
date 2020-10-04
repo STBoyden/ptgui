@@ -1,8 +1,9 @@
-use crate::common::*;
-use crate::gui_component::GuiComponentBehaviour;
-use crate::prelude::{state_get_colour, Colour, Dimensions, Point, StateColour};
-use raylib::prelude::text::measure_text;
-use raylib::prelude::*;
+use crate::{
+    common::*,
+    gui_component::GuiComponentBehaviour,
+    prelude::{state_get_colour, Colour, Dimensions, Point, StateColour},
+};
+use raylib::prelude::{text::measure_text, *};
 use std::iter::FromIterator;
 
 #[derive(PartialEq)]

@@ -1,6 +1,8 @@
-use crate::common::*;
-use crate::gui_component::GuiComponentBehaviour;
-use crate::prelude::{state_get_colour, Colour, Dimensions, Point, StateColour};
+use crate::{
+    common::*,
+    gui_component::GuiComponentBehaviour,
+    prelude::{state_get_colour, Colour, Dimensions, Point, StateColour},
+};
 use raylib::prelude::*;
 use std::iter::FromIterator;
 

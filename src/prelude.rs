@@ -1,8 +1,3 @@
-pub use crate::button::*;
-pub use crate::dropdown::*;
-pub use crate::gui_handler::*;
-pub use crate::gui_theme::*;
-pub use crate::slider::*;
-pub use crate::traits::*;
-pub use crate::types::*;
-pub use crate::*;
+pub use crate::{
+    button::*, dropdown::*, gui_handler::*, gui_theme::*, slider::*, traits::*, types::*, *,
+};
