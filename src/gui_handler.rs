@@ -32,23 +32,14 @@ impl<T> GuiHandler<T> {
         let mut widest = -1;
 
         for component in self.components.iter() {
-            let width = match component {
-                DrawableType::Button(b) => b.dimensions.0,
-                DrawableType::Slider(s) => s.dimensions.0,
-                DrawableType::Dropdown(d) => d.dimensions.0,
-            };
-
+            let width = component.get_dimensions().0;
             if width > widest {
                 widest = width;
             }
         }
 
         for component in self.components.iter_mut() {
-            match component {
-                DrawableType::Button(b) => b.resize((widest, b.dimensions.1)),
-                DrawableType::Slider(s) => s.resize((widest, s.dimensions.1)),
-                DrawableType::Dropdown(d) => d.resize((widest, d.dimensions.1)),
-            }
+            component.resize((widest, component.get_dimensions().1));
         }
     }
 
@@ -217,18 +208,14 @@ impl<T> GuiHandler<T> {
 
     fn get_first_dimensions(&self) -> Dimensions {
         match self.components.get(0) {
-            Some(DrawableType::Button(b)) => b.dimensions,
-            Some(DrawableType::Slider(s)) => s.dimensions,
-            Some(DrawableType::Dropdown(d)) => d.dimensions,
+            Some(c) => c.get_dimensions(),
             None => (0, 50),
         }
     }
 
     fn get_previous_position(&self) -> Point {
         match self.components.last() {
-            Some(DrawableType::Button(b)) => b.position,
-            Some(DrawableType::Slider(s)) => s.position,
-            Some(DrawableType::Dropdown(d)) => d.position,
+            Some(c) => c.get_position(),
             None => (0, 0),
         }
     }
@@ -321,31 +308,8 @@ impl<T> GuiHandler<T> {
         }
 
         for component in self.components.iter_mut() {
-            match component {
-                DrawableType::Button(b) => {
-                    b.draw(&mut draw_handler);
-                    self.actions.push(b.is_clicked(
-                        mouse_position,
-                        draw_handler.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON),
-                    ));
-                }
-                DrawableType::Slider(s) => {
-                    s.draw(&mut draw_handler);
-                    s.is_clicked(
-                        mouse_position,
-                        draw_handler.is_mouse_button_down(MouseButton::MOUSE_LEFT_BUTTON),
-                    );
-                }
-                DrawableType::Dropdown(d) => {
-                    d.draw(&mut draw_handler);
-                    d.is_clicked(
-                        mouse_position,
-                        draw_handler.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON),
-                    );
-
-                    self.actions.append(&mut d.actions);
-                }
-            }
+            component.draw(&mut draw_handler);
+            component.is_clicked(mouse_position, &mut self.actions, &draw_handler);
         }
 
         // SAFETY: makes sure that the draw_handler is returned to the correct scope.
