@@ -4,6 +4,7 @@ pub mod dropdown;
 pub mod gui_component;
 pub mod gui_handler;
 pub mod gui_theme;
+pub mod label;
 pub mod prelude;
 pub mod slider;
 pub mod traits;

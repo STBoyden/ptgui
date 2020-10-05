@@ -26,3 +26,7 @@ path = "src/slider_example.rs"
 [[bin]]
 name = "dropdown-sample"
 path = "src/dropdown_example.rs"
+
+[[bin]]
+name = "label-sample"
+path = "src/label_example.rs"

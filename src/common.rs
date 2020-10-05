@@ -22,6 +22,7 @@ pub enum DrawableType {
     Button(Button),
     Slider(Slider),
     Dropdown(Dropdown),
+    Label(Label),
 }
 
 impl DrawableType {
@@ -30,6 +31,7 @@ impl DrawableType {
             DrawableType::Button(b) => b.draw(draw_handler),
             DrawableType::Slider(s) => s.draw(draw_handler),
             DrawableType::Dropdown(d) => d.draw(draw_handler),
+            DrawableType::Label(l) => l.draw(draw_handler),
         }
     }
 
@@ -55,6 +57,7 @@ impl DrawableType {
                 );
                 actions.append(&mut d.actions)
             }
+            _ => (),
         }
     }
 
@@ -63,6 +66,7 @@ impl DrawableType {
             DrawableType::Button(b) => b.position,
             DrawableType::Slider(s) => s.position,
             DrawableType::Dropdown(d) => d.position,
+            DrawableType::Label(l) => l.position,
         }
     }
 
@@ -71,6 +75,7 @@ impl DrawableType {
             DrawableType::Button(b) => b.dimensions,
             DrawableType::Slider(s) => s.dimensions,
             DrawableType::Dropdown(d) => d.dimensions,
+            DrawableType::Label(l) => l.dimensions,
         }
     }
 
@@ -79,6 +84,32 @@ impl DrawableType {
             DrawableType::Button(b) => b.resize(new_dimensions),
             DrawableType::Slider(s) => s.resize(new_dimensions),
             DrawableType::Dropdown(d) => d.resize(new_dimensions),
+            DrawableType::Label(l) => l.resize(new_dimensions),
+        }
+    }
+
+    pub fn move_x(&mut self, new_x_pos: i32) {
+        match self {
+            DrawableType::Button(b) => {
+                if b.position.0 != new_x_pos {
+                    b.position.0 = new_x_pos;
+                }
+            }
+            DrawableType::Slider(s) => {
+                if s.position.0 != new_x_pos {
+                    s.move_x(new_x_pos);
+                }
+            }
+            DrawableType::Dropdown(d) => {
+                if d.position.0 != new_x_pos {
+                    d.position.0 = new_x_pos;
+                }
+            }
+            DrawableType::Label(l) => {
+                if l.position.0 != new_x_pos {
+                    l.position.0 = new_x_pos;
+                }
+            }
         }
     }
 }

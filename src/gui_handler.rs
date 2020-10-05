@@ -273,6 +273,35 @@ impl<T> GuiHandler<T> {
         Ok(dropdown)
     }
 
+    /// Adds a `Label` to the `GuiHandler` with automatic positioning. It's automatic position is
+    /// determined by whether or not there are components already added. For example, if no
+    /// components are present then the first `Label` is placed at (0, 0). If a component already
+    /// exists then the `Label`s created afterwards are placed n+50 pixels below the first
+    /// component.
+    pub fn add_label(&mut self, text: &str) -> &mut Self {
+        let first_dimensions = self.get_first_dimensions();
+        let previous_position = self.get_previous_position();
+
+        self.components.push(DrawableType::Label(Label::new(
+            text,
+            20,
+            (
+                previous_position.0,
+                previous_position.1 + first_dimensions.1,
+            ),
+        )));
+
+        self
+    }
+
+    /// Adds a `Label` to the `GuiHandler` with a given `position`.
+    pub fn add_label_with_position(&mut self, text: &str, position: Point) -> &mut Self {
+        self.components
+            .push(DrawableType::Label(Label::new(text, 20, position)));
+
+        self
+    }
+
     /// Draws the `GuiHandler` to the screen.
     pub fn draw<'a>(
         &mut self,
