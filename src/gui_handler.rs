@@ -48,9 +48,9 @@ impl<T> GuiHandler<T> {
         self
     }
 
-    /// Adds an external draw call to be executed before the `GuiHandler<T>` itself is drawn. This fixes
-    /// an issue where things that would be drawn external of the `GuiHandler<T>` have to be drawn over
-    /// the GuiHandler.
+    /// Adds an external draw call to be executed before the `GuiHandler<T>` itself is drawn. This
+    /// fixes an issue where things that would be drawn external of the `GuiHandler<T>` have to be
+    /// drawn over the GuiHandler.
     pub fn add_external_draw(&mut self, external_draw: Box<dyn Drawable>) -> &mut Self {
         self.additional_draws.push(external_draw);
 
@@ -85,8 +85,8 @@ impl<T> GuiHandler<T> {
         self
     }
 
-    /// Makes it so that when components are drawn, that they are all drawn at the same width so that
-    /// they are uniform.
+    /// Makes it so that when components are drawn, that they are all drawn at the same width so
+    /// that they are uniform.
     pub fn set_components_fix_widths(&mut self, value: bool) -> &mut Self {
         self.components_fixed_widths = value;
 
@@ -108,9 +108,10 @@ impl<T> GuiHandler<T> {
     }
 
     /// Adds a `Button` to the `GuiHandler` with automatic positioning. It's automatic position is
-    /// determined by whether or not there are components already added. For example, if no components
-    /// are present then the first `Button` is placed at (0, 0). If a component already exists then
-    /// the `Button`s created afterwards are placed n+50 pixels below the first component.
+    /// determined by whether or not there are components already added. For example, if no
+    /// components are present then the first `Button` is placed at (0, 0). If a component already
+    /// exists then the `Button`s created afterwards are placed n+50 pixels below the first
+    /// component.
     pub fn add_button(&mut self, text: &str, action: &str) -> &mut Self {
         let first_dimensions = self.get_first_dimensions();
         let previous_position = self.get_previous_position();
@@ -157,9 +158,10 @@ impl<T> GuiHandler<T> {
     }
 
     /// Adds a `Slider` to the `GuiHandler` with automatic positioning. It's automatic position is
-    /// determined by whether or not there are components already added. For example, if no components
-    /// are present then the first `Slider` is placed at (0, 0). If a component already exists then
-    /// the `Slider`s created afterwards are placed n+50 pixels below the first component.
+    /// determined by whether or not there are components already added. For example, if no
+    /// components are present then the first `Slider` is placed at (0, 0). If a component already
+    /// exists then the `Slider`s created afterwards are placed n+50 pixels below the first
+    /// component.
     pub fn add_slider(&mut self, min: i32, max: i32, initial_value: f32) -> &mut Self {
         let first_dimensions = self.get_first_dimensions();
         let previous_position = self.get_previous_position();
@@ -218,10 +220,11 @@ impl<T> GuiHandler<T> {
         }
     }
 
-    /// Adds a `Dropdown` to the `GuiHandler` with automatic positioning. It's automatic position is
-    /// determined by whether or not there are components already added. For example, if no components
-    /// are present then the first `Dropdown` is placed at (0, 0). If a component already exists then
-    /// the `Dropdown`s created afterwards are placed n+50 pixels below the first component.
+    /// Adds a `Dropdown` to the `GuiHandler` with automatic positioning. It's automatic position
+    /// is determined by whether or not there are components already added. For example, if no
+    /// components are present then the first `Dropdown` is placed at (0, 0). If a component
+    /// already exists then the `Dropdown`s created afterwards are placed n+50 pixels below the
+    /// first component.
     pub fn add_dropdown(&mut self, text: &str) -> &mut Self {
         let first_dimensions = self.get_first_dimensions();
         let previous_position = self.get_previous_position();
