@@ -43,9 +43,7 @@ impl Dropdown {
 
     fn get_previous_position(&self) -> Point {
         match self.components.last() {
-            Some(DrawableType::Button(b)) => b.position,
-            Some(DrawableType::Slider(s)) => s.position,
-            Some(DrawableType::Dropdown(d)) => d.position,
+            Some(c) => c.get_position(),
             None => self.position,
         }
     }
@@ -62,23 +60,14 @@ impl Dropdown {
         let mut widest = -1;
 
         for component in self.components.iter() {
-            let width = match component {
-                DrawableType::Button(b) => b.dimensions.0,
-                DrawableType::Slider(s) => s.dimensions.0,
-                DrawableType::Dropdown(d) => d.dimensions.0,
-            };
-
+            let width = component.get_dimensions().0;
             if width > widest {
                 widest = width;
             }
         }
 
         for component in self.components.iter_mut() {
-            match component {
-                DrawableType::Button(b) => b.resize((widest, b.dimensions.1)),
-                DrawableType::Slider(s) => s.resize((widest, s.dimensions.1)),
-                DrawableType::Dropdown(d) => d.resize((widest, d.dimensions.1)),
-            }
+            component.resize((widest, component.get_dimensions().1));
         }
     }
 
@@ -88,23 +77,7 @@ impl Dropdown {
         let new_x_pos = self.position.0 + 10 + self.dimensions.0;
 
         for component in self.components.iter_mut() {
-            match component {
-                DrawableType::Button(b) => {
-                    if b.position.0 != new_x_pos {
-                        b.position.0 = new_x_pos;
-                    }
-                }
-                DrawableType::Slider(s) => {
-                    if s.position.0 != new_x_pos {
-                        s.move_x(new_x_pos);
-                    }
-                }
-                DrawableType::Dropdown(d) => {
-                    if d.position.0 != new_x_pos {
-                        d.position.0 = new_x_pos;
-                    }
-                }
-            }
+            component.move_x(new_x_pos);
         }
     }
 
@@ -124,11 +97,7 @@ impl Dropdown {
                 previous_position.0 + new_x,
                 previous_position.1
                     + match self.components.first() {
-                        Some(c) => match c {
-                            DrawableType::Button(b) => b.dimensions.1,
-                            DrawableType::Slider(s) => s.dimensions.1,
-                            DrawableType::Dropdown(d) => d.dimensions.1,
-                        },
+                        Some(c) => c.get_dimensions().1,
                         None => 0,
                     },
             ),
@@ -153,11 +122,7 @@ impl Dropdown {
                 previous_position.0 + new_x,
                 previous_position.1
                     + match self.components.first() {
-                        Some(c) => match c {
-                            DrawableType::Button(b) => b.dimensions.1,
-                            DrawableType::Slider(s) => s.dimensions.1,
-                            DrawableType::Dropdown(d) => d.dimensions.1,
-                        },
+                        Some(c) => c.get_dimensions().1,
                         None => 0,
                     },
             ),
@@ -208,11 +173,7 @@ impl Dropdown {
                 previous_position.0 + new_x,
                 previous_position.1
                     + match self.components.first() {
-                        Some(c) => match c {
-                            DrawableType::Button(b) => b.dimensions.1,
-                            DrawableType::Slider(s) => s.dimensions.1,
-                            DrawableType::Dropdown(d) => d.dimensions.1,
-                        },
+                        Some(c) => c.get_dimensions().1,
                         None => 0,
                     },
             ),
@@ -276,29 +237,7 @@ impl GuiComponentBehaviour<()> for Dropdown {
 
         if self.show {
             for component in self.components.iter_mut() {
-                match component {
-                    DrawableType::Button(b) => {
-                        b.draw(draw_handler);
-                        self.actions.push(b.is_clicked(
-                            mouse_position,
-                            draw_handler.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON),
-                        ));
-                    }
-                    DrawableType::Slider(s) => {
-                        s.draw(draw_handler);
-                        s.is_clicked(
-                            mouse_position,
-                            draw_handler.is_mouse_button_down(MouseButton::MOUSE_LEFT_BUTTON),
-                        );
-                    }
-                    DrawableType::Dropdown(d) => {
-                        d.draw(draw_handler);
-                        d.is_clicked(
-                            mouse_position,
-                            draw_handler.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON),
-                        );
-                    }
-                }
+                component.draw(draw_handler);
             }
         }
     }
