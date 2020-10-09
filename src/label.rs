@@ -16,8 +16,8 @@ pub struct Label {
 }
 
 impl Label {
-    /// Create a new button, automatically figuring out width depending on the `text` and the given
-    /// `font_size`.
+    /// Create a new button, automatically figuring out width depending on the
+    /// `text` and the given `font_size`.
     pub fn new(text: &str, font_size: i32, position: Point) -> Self {
         let dimensions = (measure_text(text, font_size) + 10, 50);
         Self {
@@ -45,7 +45,8 @@ impl Label {
         }
     }
 
-    /// Set the text of a button, automatically resizing it's width to compensate for the change.
+    /// Set the text of a button, automatically resizing it's width to
+    /// compensate for the change.
     pub fn set_text(&mut self, text: &str) -> &Self {
         let new_width = measure_text(text, self.font_size);
         self.resize((new_width, self.dimensions.1));
@@ -54,9 +55,7 @@ impl Label {
     }
 
     /// Resizes the button to the given `new_dimensions`.
-    pub fn resize(&mut self, new_dimensions: Dimensions) {
-        self.dimensions = new_dimensions;
-    }
+    pub fn resize(&mut self, new_dimensions: Dimensions) { self.dimensions = new_dimensions; }
 }
 
 impl GuiComponentBehaviour<()> for Label {
@@ -95,14 +94,14 @@ impl GuiComponentBehaviour<()> for Label {
         );
     }
 
-    /// Would check whether or not the mouse is hovering over the label, instead always return
-    /// `false` as nothing should happen when the label is being hovered over.
-    fn is_hovered(&mut self, _mouse_position: Point) -> bool {
-        false
-    }
+    /// Would check whether or not the mouse is hovering over the label, instead
+    /// always return `false` as nothing should happen when the label is
+    /// being hovered over.
+    fn is_hovered(&mut self, _mouse_position: Point) -> bool { false }
 
-    /// Would check whether or not the user is clicking on the label, however since the label
-    /// requires no funcionality when being clicked, the function always implicitly returns `()`.
+    /// Would check whether or not the user is clicking on the label, however
+    /// since the label requires no funcionality when being clicked, the
+    /// function always implicitly returns `()`.
     fn is_clicked(&mut self, _mouse_position: Point, _is_clicked: bool) {}
 }
 

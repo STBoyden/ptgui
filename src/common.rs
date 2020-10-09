@@ -15,8 +15,9 @@ pub fn is_inside(position: Point, dimensions: Dimensions, mouse_position: Point)
         && (mouse_position.1 < rect_points[2].1 && mouse_position.1 < rect_points[3].1)
 }
 
-/// Allows for the various components in `ptgui` to be contained within a single collection rather
-/// than having seperate collections for each component that can be drawn by the `GuiHandler<T>`.
+/// Allows for the various components in `ptgui` to be contained within a single
+/// collection rather than having seperate collections for each component that
+/// can be drawn by the `GuiHandler<T>`.
 #[derive(PartialEq)]
 pub enum DrawableType {
     Button(Button),
@@ -56,7 +57,7 @@ impl DrawableType {
                     draw_handler.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON),
                 );
                 actions.append(&mut d.actions)
-            }
+            },
             _ => (),
         }
     }
@@ -90,26 +91,22 @@ impl DrawableType {
 
     pub fn move_x(&mut self, new_x_pos: i32) {
         match self {
-            DrawableType::Button(b) => {
+            DrawableType::Button(b) =>
                 if b.position.0 != new_x_pos {
                     b.position.0 = new_x_pos;
-                }
-            }
-            DrawableType::Slider(s) => {
+                },
+            DrawableType::Slider(s) =>
                 if s.position.0 != new_x_pos {
                     s.move_x(new_x_pos);
-                }
-            }
-            DrawableType::Dropdown(d) => {
+                },
+            DrawableType::Dropdown(d) =>
                 if d.position.0 != new_x_pos {
                     d.position.0 = new_x_pos;
-                }
-            }
-            DrawableType::Label(l) => {
+                },
+            DrawableType::Label(l) =>
                 if l.position.0 != new_x_pos {
                     l.position.0 = new_x_pos;
-                }
-            }
+                },
         }
     }
 }

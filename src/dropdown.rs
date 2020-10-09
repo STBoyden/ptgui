@@ -16,8 +16,8 @@ pub struct Dropdown {
 }
 
 impl Dropdown {
-    /// Create a new `Dropdown`, automatically figuring out width depending on the `text` and the
-    /// given `font_size`.
+    /// Create a new `Dropdown`, automatically figuring out width depending on
+    /// the `text` and the given `font_size`.
     pub fn new(text: &str, font_size: i32, position: Point) -> Self {
         let dimensions = (measure_text(text, font_size) + 10, 50);
         Self {
@@ -34,7 +34,8 @@ impl Dropdown {
         }
     }
 
-    /// Add a new `DrawableType` component to the list of components to be drawn.
+    /// Add a new `DrawableType` component to the list of components to be
+    /// drawn.
     pub fn add_component(&mut self, component: DrawableType) -> &mut Self {
         self.components.push(component);
 
@@ -48,8 +49,8 @@ impl Dropdown {
         }
     }
 
-    /// Makes it so that when components are drawn, that they are all drawn at the same width so that
-    /// they are uniform.
+    /// Makes it so that when components are drawn, that they are all drawn at
+    /// the same width so that they are uniform.
     pub fn set_components_fix_widths(&mut self, value: bool) -> &mut Self {
         self.components_fixed_widths = value;
 
@@ -81,10 +82,12 @@ impl Dropdown {
         }
     }
 
-    /// Adds a `Button` to the `Dropdown` with automatic positioning. It's automatic position is
-    /// determined by whether or not there are components already added. For example, if no components
-    /// are present then the first `Button` is placed at (0, 0). If a component already exists then
-    /// the `Button`s created afterwards are placed n+50 pixels below the first component.
+    /// Adds a `Button` to the `Dropdown` with automatic positioning. It's
+    /// automatic position is determined by whether or not there are
+    /// components already added. For example, if no components are present
+    /// then the first `Button` is placed at (0, 0). If a component already
+    /// exists then the `Button`s created afterwards are placed n+50 pixels
+    /// below the first component.
     pub fn add_button(&mut self, text: &str, action: &str) -> &mut Self {
         let previous_position = self.get_previous_position();
         let new_x = self.position.0 + self.dimensions.0;
@@ -106,10 +109,12 @@ impl Dropdown {
         self
     }
 
-    /// Adds a `Slider` to the `Dropdown` with automatic positioning. It's automatic position is
-    /// determined by whether or not there are components already added. For example, if no components
-    /// are present then the first `Slider` is placed at (0, 0). If a component already exists then
-    /// the `Slider`s created afterwards are placed n+50 pixels below the first component.
+    /// Adds a `Slider` to the `Dropdown` with automatic positioning. It's
+    /// automatic position is determined by whether or not there are
+    /// components already added. For example, if no components are present
+    /// then the first `Slider` is placed at (0, 0). If a component already
+    /// exists then the `Slider`s created afterwards are placed n+50 pixels
+    /// below the first component.
     pub fn add_slider(&mut self, min: i32, max: i32, initial_value: f32) -> &mut Self {
         let previous_position = self.get_previous_position();
         let new_x = self.position.0 + self.dimensions.0;
@@ -158,10 +163,12 @@ impl Dropdown {
         }
     }
 
-    /// Adds a `Dropdown` to the `Dropdown` with automatic positioning. It's automatic position is
-    /// determined by whether or not there are components already added. For example, if no components
-    /// are present then the first `Dropdown` is placed at (0, 0). If a component already exists then
-    /// the `Dropdown`s created afterwards are placed n+50 pixels below the first component.
+    /// Adds a `Dropdown` to the `Dropdown` with automatic positioning. It's
+    /// automatic position is determined by whether or not there are
+    /// components already added. For example, if no components are present
+    /// then the first `Dropdown` is placed at (0, 0). If a component already
+    /// exists then the `Dropdown`s created afterwards are placed n+50
+    /// pixels below the first component.
     pub fn add_dropdown(&mut self, text: &str) -> &mut Self {
         let previous_position = self.get_previous_position();
         let new_x = self.position.0 + self.dimensions.0;
@@ -242,8 +249,8 @@ impl GuiComponentBehaviour<()> for Dropdown {
         }
     }
 
-    /// Checks whether or not the cursor is hovering over the `Dropdown` and returns `true` or
-    /// `false`.
+    /// Checks whether or not the cursor is hovering over the `Dropdown` and
+    /// returns `true` or `false`.
     fn is_hovered(&mut self, mouse_position: Point) -> bool {
         if is_inside(self.position, self.dimensions, mouse_position) {
             self.background_colour = state_get_colour(StateColour::Hovered);

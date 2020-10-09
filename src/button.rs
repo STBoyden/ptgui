@@ -17,8 +17,8 @@ pub struct Button {
 }
 
 impl Button {
-    /// Create a new button, automatically figuring out width depending on the `text` and the given
-    /// `font_size`.
+    /// Create a new button, automatically figuring out width depending on the
+    /// `text` and the given `font_size`.
     pub fn new(text: &str, action_string: &str, font_size: i32, position: Point) -> Self {
         let dimensions = (measure_text(text, font_size) + 10, 50);
         Self {
@@ -49,7 +49,8 @@ impl Button {
         }
     }
 
-    /// Set the text of a button, automatically resizing it's width to compensate for the change.
+    /// Set the text of a button, automatically resizing it's width to
+    /// compensate for the change.
     pub fn set_text(&mut self, text: &str) -> &Self {
         let new_width = measure_text(text, self.font_size);
         self.resize((new_width, self.dimensions.1));
@@ -58,9 +59,7 @@ impl Button {
     }
 
     /// Resizes the button to the given `new_dimensions`.
-    pub fn resize(&mut self, new_dimensions: Dimensions) {
-        self.dimensions = new_dimensions;
-    }
+    pub fn resize(&mut self, new_dimensions: Dimensions) { self.dimensions = new_dimensions; }
 }
 
 impl GuiComponentBehaviour<String> for Button {
@@ -86,8 +85,8 @@ impl GuiComponentBehaviour<String> for Button {
         );
     }
 
-    /// Checks whether cursor is hovering over button, changes colour and returns `true` or `false`
-    /// depending on the result.
+    /// Checks whether cursor is hovering over button, changes colour and
+    /// returns `true` or `false` depending on the result.
     fn is_hovered(&mut self, mouse_position: Point) -> bool {
         if is_inside(self.position, self.dimensions, mouse_position) {
             self.colour = state_get_colour(StateColour::Hovered);

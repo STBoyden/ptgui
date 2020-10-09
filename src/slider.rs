@@ -81,11 +81,10 @@ impl Slider {
     }
 
     /// Returns the value of the current `Slider`.
-    pub fn get_value(&self) -> f32 {
-        self.value
-    }
+    pub fn get_value(&self) -> f32 { self.value }
 
-    /// Resizes the slider to `new_dimensions` and resizes it's components proportionally.
+    /// Resizes the slider to `new_dimensions` and resizes it's components
+    /// proportionally.
     pub fn resize(&mut self, new_dimensions: Dimensions) {
         self.dimensions = new_dimensions;
         self.slider_dimensions = (new_dimensions.0 - 120, new_dimensions.1 - 15);
